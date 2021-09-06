@@ -1,0 +1,11 @@
+package data.model
+
+data class UIUser(
+    val id: Int,
+    val username: String,
+    val password: String,
+    val isBlocked: Boolean,
+    val strongPassword: Boolean
+)
+
+const val SUPERUSER_NAME = "ADMIN"

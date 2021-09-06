@@ -9,6 +9,7 @@ plugins {
 
 group = "com.zhuravlev"
 version = "1.0"
+val exposedVersion: String by project
 
 repositories {
     google()
@@ -17,8 +18,12 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.21")
     implementation(compose.desktop.currentOs)
+
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 }
 
 tasks.test {
