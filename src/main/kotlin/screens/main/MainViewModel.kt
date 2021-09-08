@@ -25,10 +25,17 @@ class MainViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
             _profile.emit(null)
         }
     }
+
+    fun postState(state: MainState) {
+        viewModelScope.launch {
+            _state.emit(state)
+        }
+    }
 }
 
 enum class MainState {
     empty,
     changePassword,
-    viewList
+    viewList,
+    addUser
 }
