@@ -18,4 +18,8 @@ class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
             _user.emit(repositoryUser.getUserByName(name))
         }
     }
+
+    fun checkPassword(password: String) {
+        TODO("Not yet implemented")
+    }
 }
