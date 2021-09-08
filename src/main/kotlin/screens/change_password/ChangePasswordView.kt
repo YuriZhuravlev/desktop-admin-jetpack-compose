@@ -63,6 +63,7 @@ fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, o
                     if (pass0 == pass1)
                         viewModel.edit(pass0)
                 },
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 16.dp),
                 enabled = pass0.isNotBlank() && pass0 == pass1
             ) {
                 Text("Подтвердить")
