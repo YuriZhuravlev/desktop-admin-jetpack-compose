@@ -12,31 +12,32 @@ import java.io.File
 
 object DAOImpl : DAO {
     private val db by lazy {
-        val file = File("data/data.db")
+        val file = File("data.db")
         if (!file.exists()) {
             file.createNewFile()
-            useResource("data/data.db") {
+            useResource("data.db") {
                 it.copyTo(file.outputStream())
             }
         }
-        Database.connect("jdbc:sqlite:file:data/data.db", "org.sqlite.JDBC")
+        Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
     }
 
-    override fun getUserByName(name: String): DBUser? {
-        return transaction(db) {
+    override suspend fun getUserByName(name: String): DBUser? {
+        db
+        return transaction {
             addLogger(StdOutSqlLogger)
             DBUser.find { UserTable.username eq name }.firstOrNull()
         }
     }
 
-    override fun getUsers(): List<DBUser> {
+    override suspend fun getUsers(): List<DBUser> {
         return transaction(db) {
             addLogger(StdOutSqlLogger)
             DBUser.all().toList()
         }
     }
 
-    override fun patchUser(user: DBUser) {
+    override suspend fun patchUser(user: DBUser) {
         transaction(db) {
             addLogger(StdOutSqlLogger)
             DBUser[user.id].apply {

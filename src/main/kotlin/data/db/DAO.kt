@@ -3,7 +3,7 @@ package data.db
 import data.db.entity.DBUser
 
 interface DAO {
-    fun getUserByName(name: String): DBUser?
-    fun getUsers(): List<DBUser>
-    fun patchUser(user: DBUser)
+    suspend fun getUserByName(name: String): DBUser?
+    suspend fun getUsers(): List<DBUser>
+    suspend fun patchUser(user: DBUser)
 }

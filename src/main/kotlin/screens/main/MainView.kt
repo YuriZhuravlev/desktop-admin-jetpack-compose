@@ -1,7 +1,7 @@
-package screens.about
+package screens.main
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun About() {
+fun MainView() {
 }

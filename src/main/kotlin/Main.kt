@@ -6,13 +6,15 @@ import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.res.useResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import screens.Login
+import data.repository.RepositoryUser
+import screens.LoginViev
+import screens.login.LoginViewModel
 
 @Composable
 @Preview
 fun App() {
     DesktopMaterialTheme {
-        Login()
+        LoginViev(LoginViewModel(RepositoryUser))
     }
 }
 
