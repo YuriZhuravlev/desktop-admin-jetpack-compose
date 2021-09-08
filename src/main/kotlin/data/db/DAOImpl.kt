@@ -23,21 +23,17 @@ object DAOImpl : DAO {
     }
 
     override fun getUserByName(name: String): DBUser? {
-        var user: DBUser? = null
-        transaction(db) {
+        return transaction(db) {
             addLogger(StdOutSqlLogger)
-            user = DBUser.find { UserTable.username eq name }.firstOrNull()
+            DBUser.find { UserTable.username eq name }.firstOrNull()
         }
-        return user
     }
 
     override fun getUsers(): List<DBUser> {
-        val list = mutableListOf<DBUser>()
-        transaction(db) {
+        return transaction(db) {
             addLogger(StdOutSqlLogger)
-            list.addAll(DBUser.all())
+            DBUser.all().toList()
         }
-        return list
     }
 
     override fun patchUser(user: DBUser) {
