@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import data.model.UIUser
 import data.repository.RepositoryUser
 import screens.LoginViev
+import screens.about.AboutView
 import screens.add_user.AddUserView
 import screens.add_user.AddUserViewModel
 import screens.change_password.ChangePasswordView
@@ -60,7 +61,10 @@ fun MainView(viewModel: MainViewModel) {
                     var expanded by remember { mutableStateOf(false) }
                     Text("Помощь", modifier = Modifier.clickable { expanded = !expanded }.padding(2.dp))
                     DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
-                        Text("О программе", modifier = Modifier.clickable { expanded = !expanded })
+                        Text("О программе", modifier = Modifier.clickable {
+                            expanded = !expanded
+                            viewModel.postState(MainState.about)
+                        })
                     }
                 }
             }
@@ -141,6 +145,11 @@ fun MainView(viewModel: MainViewModel) {
                             AddUserViewModel(RepositoryUser),
                             Modifier.padding(horizontal = 8.dp).fillMaxWidth()
                         ) {
+                            viewModel.postState(MainState.empty)
+                        }
+                    }
+                    MainState.about -> {
+                        AboutView(Modifier.fillMaxSize()) {
                             viewModel.postState(MainState.empty)
                         }
                     }

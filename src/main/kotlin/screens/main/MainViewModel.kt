@@ -37,5 +37,6 @@ enum class MainState {
     empty,
     changePassword,
     viewList,
-    addUser
+    addUser,
+    about
 }
