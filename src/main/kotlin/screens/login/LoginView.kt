@@ -14,17 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import data.Resource
+import data.model.UIUser
+import data.repository.RepositoryUser
+import screens.change_password.ChangePasswordView
+import screens.change_password.ChangePasswordViewModel
 import screens.login.LoginViewModel
 import ui.BigText
 import ui.NormalText
 import kotlin.system.exitProcess
 
 @Composable
-fun LoginViev(viewModel: LoginViewModel) {
+fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
     var count by remember { mutableStateOf(0) }
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val user by viewModel.user.collectAsState()
+    val auth by viewModel.auth.collectAsState()
+    auth.ifSuccess {
+        it?.let(onLogin)
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         BigText("Вход", modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 24.dp))
@@ -57,18 +65,17 @@ fun LoginViev(viewModel: LoginViewModel) {
             (user?.status == Resource.Status.SUCCESS && count < 3) -> {
                 user?.data?.let {
                     if (it.password.isBlank()) {
-                        NormalText("Придумайте пароль", modifier = Modifier.align(Alignment.CenterHorizontally))
-                        TextField(
-                            password,
-                            onValueChange = {
-                                password = it
-                            },
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            visualTransformation = PasswordVisualTransformation()
-                        )
-                        // TODO
+                        ChangePasswordView(
+                            ChangePasswordViewModel(it.id, RepositoryUser),
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        ) {
+                            viewModel.newPassword()
+                        }
                     } else {
                         NormalText("Введите пароль", modifier = Modifier.align(Alignment.CenterHorizontally))
+                        if (auth.status.isError()) {
+                            Text("Неверный пароль")
+                        }
                         TextField(
                             password,
                             onValueChange = {

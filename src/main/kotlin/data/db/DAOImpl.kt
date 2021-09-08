@@ -22,9 +22,15 @@ object DAOImpl : DAO {
         Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
     }
 
+    override suspend fun getUser(id: Int): DBUser? {
+        return transaction(db) {
+            addLogger(StdOutSqlLogger)
+            DBUser.findById(id)
+        }
+    }
+
     override suspend fun getUserByName(name: String): DBUser? {
-        db
-        return transaction {
+        return transaction(db) {
             addLogger(StdOutSqlLogger)
             DBUser.find { UserTable.username eq name }.firstOrNull()
         }

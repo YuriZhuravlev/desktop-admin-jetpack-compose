@@ -7,14 +7,14 @@ import androidx.compose.ui.res.useResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import data.repository.RepositoryUser
-import screens.LoginViev
-import screens.login.LoginViewModel
+import screens.main.MainView
+import screens.main.MainViewModel
 
 @Composable
 @Preview
 fun App() {
     DesktopMaterialTheme {
-        LoginViev(LoginViewModel(RepositoryUser))
+        MainView(MainViewModel(RepositoryUser))
     }
 }
 

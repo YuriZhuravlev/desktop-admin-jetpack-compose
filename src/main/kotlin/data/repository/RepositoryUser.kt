@@ -24,6 +24,10 @@ object RepositoryUser {
             Resource.error(e)
         }
     }
+
+    suspend fun editPassword(userId: Int, newPassword: String) {
+        dao.getUser(userId)?.password = newPassword
+    }
 }
 
 fun DBUser.toUIUser() = UIUser(id.value, username, password, isBlocked, strongPassword)
