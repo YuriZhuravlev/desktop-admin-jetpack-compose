@@ -18,7 +18,13 @@ class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
     fun getUser(name: String) {
         viewModelScope.launch {
             _user.emit(Resource.loading())
-            _user.emit(repositoryUser.getUserByName(name))
+            val res = repositoryUser.getUserByName(name)
+            _user.emit(
+                if (res.data?.isBlocked == true)
+                    Resource.error(BlockedUser())
+                else
+                    res
+            )
         }
     }
 
@@ -41,4 +47,5 @@ class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
     }
 
     class InvalidPassword : Throwable()
+    class BlockedUser : Throwable()
 }

@@ -55,7 +55,10 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
                 if (user != null) {
                     if (user?.status?.isError() == true)
                         Text(
-                            "Что-то пошло не так",
+                            if (user?.error is LoginViewModel.BlockedUser)
+                                "Этот пользователь заблокирован, свяжитесь с поддержкой"
+                            else
+                                "Что-то пошло не так",
                             modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)
                                 .padding(bottom = 4.dp),
                             color = Color.Red
