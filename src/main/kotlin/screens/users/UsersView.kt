@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import data.model.UIUser
+import screens.main.isAdmin
 import ui.NormalText
 
 @Composable
@@ -91,7 +92,7 @@ fun UserDetails(viewModel: UsersViewModel, modifier: Modifier) {
                 NormalText("is_blocked: ")
                 Switch(user.isBlocked, onCheckedChange = {
                     viewModel.patchIsBlocked(it)
-                })
+                }, enabled = !user.isAdmin)
             }
             Divider(Modifier.fillMaxWidth())
             Row {

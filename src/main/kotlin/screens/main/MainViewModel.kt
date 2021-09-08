@@ -22,6 +22,7 @@ class MainViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
 
     fun logout() {
         viewModelScope.launch {
+            postState(MainState.empty)
             _profile.emit(null)
         }
     }
