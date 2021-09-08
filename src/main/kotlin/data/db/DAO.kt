@@ -10,4 +10,5 @@ interface DAO {
     suspend fun editPassword(userId: Int, newPassword: String): DBUser?
     suspend fun editIsBlocked(id: Int, fl: Boolean): DBUser?
     suspend fun editStrongPassword(id: Int, fl: Boolean): DBUser?
+    suspend fun addUser(username: String, strongPassword: Boolean): DBUser
 }

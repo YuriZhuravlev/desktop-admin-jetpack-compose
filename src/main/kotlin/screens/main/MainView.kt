@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import data.model.UIUser
 import data.repository.RepositoryUser
 import screens.LoginViev
+import screens.add_user.AddUserView
+import screens.add_user.AddUserViewModel
 import screens.change_password.ChangePasswordView
 import screens.change_password.ChangePasswordViewModel
 import screens.login.LoginViewModel
@@ -135,7 +137,12 @@ fun MainView(viewModel: MainViewModel) {
                         }
                     }
                     MainState.addUser -> {
-
+                        AddUserView(
+                            AddUserViewModel(RepositoryUser),
+                            Modifier.padding(horizontal = 8.dp).fillMaxWidth()
+                        ) {
+                            viewModel.postState(MainState.empty)
+                        }
                     }
                 }
             }

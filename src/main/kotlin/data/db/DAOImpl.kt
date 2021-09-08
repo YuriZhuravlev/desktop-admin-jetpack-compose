@@ -78,4 +78,15 @@ object DAOImpl : DAO {
             }
         }
     }
+
+    override suspend fun addUser(username: String, strongPassword: Boolean): DBUser {
+        return transaction(db) {
+            DBUser.new {
+                this.username = username
+                password = ""
+                isBlocked = false
+                this.strongPassword = true
+            }
+        }
+    }
 }

@@ -35,6 +35,15 @@ object RepositoryUser {
 
     suspend fun editStrongPassword(id: Int, fl: Boolean): UIUser? =
         dao.editStrongPassword(id, fl)?.toUIUser()
+
+    suspend fun addUser(name: String, strongPassword: Boolean): Resource<UIUser> {
+        return try {
+            Resource.success(dao.addUser(name, strongPassword).toUIUser())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.error(e)
+        }
+    }
 }
 
 fun DBUser.toUIUser() = UIUser(id.value, username, password, isBlocked, strongPassword)

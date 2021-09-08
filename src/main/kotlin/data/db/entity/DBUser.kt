@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.Column
 
 object UserTable : IntIdTable("user_table") {
     val username: Column<String> = varchar("username", 50)
-    val password: Column<String> = varchar("password", 50)
+    val password: Column<String> = varchar("password", 50).uniqueIndex()
     val isBlocked: Column<Boolean> = bool("is_blocked")
     val strongPassword: Column<Boolean> = bool("strong_password")
 }
