@@ -34,12 +34,9 @@ class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
         }
     }
 
-    fun newPassword() {
+    fun newPassword(user: UIUser) {
         viewModelScope.launch {
-            val profile = _user.value
-            profile?.data.let {
-                _auth.emit(Resource(Resource.Status.SUCCESS, it, profile?.error))
-            }
+            _auth.emit(Resource.success(user))
         }
     }
 

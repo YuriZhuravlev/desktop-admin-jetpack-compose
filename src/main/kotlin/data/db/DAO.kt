@@ -7,5 +7,5 @@ interface DAO {
     suspend fun getUserByName(name: String): DBUser?
     suspend fun getUsers(): List<DBUser>
     suspend fun patchUser(user: DBUser)
-    suspend fun editPassword(userId: Int, newPassword: String)
+    suspend fun editPassword(userId: Int, newPassword: String): DBUser?
 }

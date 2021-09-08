@@ -55,9 +55,11 @@ object DAOImpl : DAO {
         }
     }
 
-    override suspend fun editPassword(userId: Int, newPassword: String) {
-        transaction(db) {
-            DBUser[userId].password = newPassword
+    override suspend fun editPassword(userId: Int, newPassword: String): DBUser? {
+        return transaction(db) {
+            DBUser[userId]?.apply {
+                password = newPassword
+            }
         }
     }
 

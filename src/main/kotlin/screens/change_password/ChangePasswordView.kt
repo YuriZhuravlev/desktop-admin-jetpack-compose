@@ -10,15 +10,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import data.model.UIUser
 import ui.NormalText
 
 @Composable
-fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, onSuccess: () -> Unit) {
+fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, onSuccess: (UIUser) -> Unit) {
     var pass0 by remember { mutableStateOf("") }
     var pass1 by remember { mutableStateOf("") }
     val result by viewModel.result.collectAsState()
 
-    if (result) onSuccess()
+    result?.let(onSuccess)
 
     Column(modifier) {
         NormalText("Придумайте пароль", modifier = Modifier.align(Alignment.CenterHorizontally))

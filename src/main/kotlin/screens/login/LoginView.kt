@@ -69,7 +69,7 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
                             ChangePasswordViewModel(it.id, RepositoryUser),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
-                            viewModel.newPassword()
+                            viewModel.newPassword(it)
                         }
                     } else {
                         NormalText("Введите пароль", modifier = Modifier.align(Alignment.CenterHorizontally))
