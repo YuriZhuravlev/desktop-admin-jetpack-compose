@@ -31,7 +31,7 @@ fun UsersView(viewModel: UsersViewModel, modifier: Modifier = Modifier) {
             LazyColumn(modifier.fillMaxWidth()) {
                 item {
                     Row(Modifier.fillMaxWidth()) {
-                        Text("id", Modifier.width(20.dp), maxLines = 1)
+                        Text("id", Modifier.width(20.dp).padding(start = 4.dp), maxLines = 1)
                         Text("username", Modifier.weight(1f), maxLines = 1)
                         Text("is_blocked", Modifier.width(80.dp), maxLines = 1)
                         Text("strong_password", Modifier.width(130.dp), maxLines = 1)
@@ -55,7 +55,7 @@ fun UsersView(viewModel: UsersViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun UserItem(user: UIUser, modifier: Modifier = Modifier) {
     Row(modifier) {
-        Text("${user.id}", Modifier.width(20.dp), maxLines = 1)
+        Text("${user.id}", Modifier.width(20.dp).padding(start = 4.dp), maxLines = 1)
         Text(user.username, Modifier.weight(1f), maxLines = 1)
         Checkbox(
             user.isBlocked,
@@ -84,19 +84,19 @@ fun UserDetails(viewModel: UsersViewModel, modifier: Modifier) {
         )
         val user = selectedUser
         if (user != null) {
-            NormalText("id: ${user.id}")
+            NormalText("id: ${user.id}", Modifier.padding(start = 4.dp))
             Divider(Modifier.fillMaxWidth())
-            NormalText("username: ${user.username}")
+            NormalText("username: ${user.username}", Modifier.padding(start = 4.dp))
             Divider(Modifier.fillMaxWidth())
             Row {
-                NormalText("is_blocked: ")
+                NormalText("is_blocked: ", Modifier.padding(start = 4.dp))
                 Switch(user.isBlocked, onCheckedChange = {
                     viewModel.patchIsBlocked(it)
                 }, enabled = !user.isAdmin)
             }
             Divider(Modifier.fillMaxWidth())
             Row {
-                NormalText("strong_password: ")
+                NormalText("strong_password: ", Modifier.padding(start = 4.dp))
                 Switch(user.strongPassword, onCheckedChange = {
                     viewModel.patchStrongPassword(it)
                 })
