@@ -11,6 +11,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import data.Resource
@@ -31,6 +32,7 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
     val user by viewModel.user.collectAsState()
     val auth by viewModel.auth.collectAsState()
     auth.ifSuccess {
+        viewModel.close()
         it?.let(onLogin)
     }
 
@@ -50,13 +52,29 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
                         .padding(vertical = 16.dp),
                     singleLine = true
                 )
+                if (user != null) {
+                    if (user?.status?.isError() == true)
+                        Text(
+                            "Что-то пошло не так",
+                            modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)
+                                .padding(bottom = 4.dp),
+                            color = Color.Red
+                        )
+                    if (user?.status?.isSuccess() == true)
+                        Text(
+                            "Такого пользователя не существует",
+                            modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)
+                                .padding(bottom = 4.dp),
+                            color = Color.Red
+                        )
+                }
                 Button(
                     onClick = {
                         count = 0
                         viewModel.getUser(name)
                     },
                     enabled = name.isNotBlank(),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)
                 ) {
                     Text("Подтвердить")
                 }
@@ -73,24 +91,30 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
                         }
                     } else {
                         NormalText("Введите пароль", modifier = Modifier.align(Alignment.CenterHorizontally))
-                        if (auth.status.isError()) {
-                            Text("Неверный пароль")
-                        }
                         TextField(
                             password,
                             onValueChange = {
                                 password = it
                             },
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.5f)
+                                .padding(vertical = 16.dp),
                             visualTransformation = PasswordVisualTransformation()
                         )
+                        if (auth.status.isError()) {
+                            Text(
+                                "Неверный пароль",
+                                modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)
+                                    .padding(bottom = 4.dp),
+                                color = Color.Red
+                            )
+                        }
                         Button(
                             onClick = {
                                 count += 1
                                 viewModel.checkPassword(password)
                             },
                             enabled = name.isNotBlank(),
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)
                         ) {
                             Text("Подтвердить")
                         }
@@ -101,7 +125,7 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
             (user?.status == Resource.Status.LOADING) -> {
                 NormalText("Введите своё имя", modifier = Modifier.align(Alignment.CenterHorizontally))
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 16.dp)
                 )
             }
             else -> {

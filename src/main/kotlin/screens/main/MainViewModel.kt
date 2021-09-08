@@ -11,15 +11,24 @@ class MainViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
     private val _profile = MutableStateFlow<UIUser?>(null)
     val profile = _profile.asStateFlow()
 
+    private val _state = MutableStateFlow(MainState.empty)
+    val state = _state.asStateFlow()
+
     fun login(user: UIUser) {
         viewModelScope.launch {
             _profile.emit(user)
         }
     }
 
-    fun logout(user: UIUser) {
+    fun logout() {
         viewModelScope.launch {
             _profile.emit(null)
         }
     }
+}
+
+enum class MainState {
+    empty,
+    changePassword,
+    viewList
 }

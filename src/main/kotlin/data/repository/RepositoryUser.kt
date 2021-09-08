@@ -18,9 +18,9 @@ object RepositoryUser {
         }
     }
 
-    suspend fun getUsers(): Resource<List<DBUser>> {
+    suspend fun getUsers(): Resource<List<UIUser>> {
         return try {
-            Resource.success(dao.getUsers())
+            Resource.success(dao.getUsers().map { it.toUIUser() })
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.error(e)
