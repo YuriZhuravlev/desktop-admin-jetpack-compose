@@ -8,4 +8,6 @@ interface DAO {
     suspend fun getUsers(): List<DBUser>
     suspend fun patchUser(user: DBUser)
     suspend fun editPassword(userId: Int, newPassword: String): DBUser?
+    suspend fun editIsBlocked(id: Int, fl: Boolean): DBUser?
+    suspend fun editStrongPassword(id: Int, fl: Boolean): DBUser?
 }

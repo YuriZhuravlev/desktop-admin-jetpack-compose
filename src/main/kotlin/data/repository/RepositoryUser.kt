@@ -29,6 +29,12 @@ object RepositoryUser {
 
     suspend fun editPassword(userId: Int, newPassword: String): UIUser? =
         dao.editPassword(userId, newPassword)?.toUIUser()
+
+    suspend fun editIsBlocked(id: Int, fl: Boolean): UIUser? =
+        dao.editIsBlocked(id, fl)?.toUIUser()
+
+    suspend fun editStrongPassword(id: Int, fl: Boolean): UIUser? =
+        dao.editStrongPassword(id, fl)?.toUIUser()
 }
 
 fun DBUser.toUIUser() = UIUser(id.value, username, password, isBlocked, strongPassword)

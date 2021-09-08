@@ -63,5 +63,19 @@ object DAOImpl : DAO {
         }
     }
 
+    override suspend fun editIsBlocked(id: Int, fl: Boolean): DBUser? {
+        return transaction(db) {
+            DBUser[id]?.apply {
+                isBlocked = fl
+            }
+        }
+    }
 
+    override suspend fun editStrongPassword(id: Int, fl: Boolean): DBUser? {
+        return transaction(db) {
+            DBUser[id]?.apply {
+                strongPassword = fl
+            }
+        }
+    }
 }

@@ -12,9 +12,70 @@ class UsersViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
     private val _users = MutableStateFlow<Resource<List<UIUser>>>(Resource.loading())
     val users = _users.asStateFlow()
 
+    private val _selectedUser = MutableStateFlow<UIUser?>(null)
+    val selectedUser = _selectedUser.asStateFlow()
+
     fun getUsers() {
         viewModelScope.launch {
             _users.emit(repositoryUser.getUsers())
+        }
+    }
+
+    fun patchIsBlocked(fl: Boolean) {
+        viewModelScope.launch {
+            _selectedUser.value?.let {
+                repositoryUser.editIsBlocked(it.id, fl)?.let {
+                    _selectedUser.emit(it)
+                }
+            }
+        }
+    }
+
+    fun patchStrongPassword(fl: Boolean) {
+        viewModelScope.launch {
+            _selectedUser.value?.let {
+                repositoryUser.editStrongPassword(it.id, fl)?.let {
+                    _selectedUser.emit(it)
+                }
+            }
+        }
+    }
+
+    fun selectUser(uiUser: UIUser?) {
+        viewModelScope.launch {
+            _selectedUser.emit(uiUser)
+        }
+    }
+
+    fun backUser() {
+        viewModelScope.launch {
+            _selectedUser.value?.let { oldUser ->
+                val list = users.value.data
+                list?.indexOfFirst {
+                    it.id == oldUser.id
+                }?.let { index ->
+                    when {
+                        (index == -1 || index == 0) -> selectUser(list.lastOrNull())
+                        else -> selectUser(list[index - 1])
+                    }
+                }
+            }
+        }
+    }
+
+    fun nextUser() {
+        viewModelScope.launch {
+            _selectedUser.value?.let { oldUser ->
+                val list = users.value.data
+                list?.indexOfFirst {
+                    it.id == oldUser.id
+                }?.let { index ->
+                    when {
+                        (index == -1 || index == list.lastIndex) -> selectUser(list.firstOrNull())
+                        else -> selectUser(list[index + 1])
+                    }
+                }
+            }
         }
     }
 }
