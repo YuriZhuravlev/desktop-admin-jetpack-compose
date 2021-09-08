@@ -13,6 +13,7 @@ object RepositoryUser {
         return try {
             Resource.success(dao.getUserByName(name)?.toUIUser())
         } catch (e: Exception) {
+            e.printStackTrace()
             Resource.error(e)
         }
     }
@@ -21,12 +22,13 @@ object RepositoryUser {
         return try {
             Resource.success(dao.getUsers())
         } catch (e: Exception) {
+            e.printStackTrace()
             Resource.error(e)
         }
     }
 
     suspend fun editPassword(userId: Int, newPassword: String) {
-        dao.getUser(userId)?.password = newPassword
+        dao.editPassword(userId, newPassword)
     }
 }
 

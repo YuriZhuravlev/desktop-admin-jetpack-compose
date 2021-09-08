@@ -84,16 +84,16 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             visualTransformation = PasswordVisualTransformation()
                         )
-                    }
-                    Button(
-                        onClick = {
-                            count += 1
-                            viewModel.checkPassword(password)
-                        },
-                        enabled = name.isNotBlank(),
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text("Подтвердить")
+                        Button(
+                            onClick = {
+                                count += 1
+                                viewModel.checkPassword(password)
+                            },
+                            enabled = name.isNotBlank(),
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        ) {
+                            Text("Подтвердить")
+                        }
                     }
                 }
             }

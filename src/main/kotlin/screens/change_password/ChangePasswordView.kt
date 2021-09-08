@@ -1,6 +1,7 @@
 package screens.change_password
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import ui.NormalText
 
 @Composable
@@ -25,7 +27,7 @@ fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, o
             onValueChange = {
                 pass0 = it
             },
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 16.dp),
             visualTransformation = PasswordVisualTransformation()
         )
         TextField(
@@ -33,12 +35,16 @@ fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, o
             onValueChange = {
                 pass1 = it
             },
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 16.dp),
             visualTransformation = PasswordVisualTransformation()
         )
-        Button(onClick = {
-
-        }) {
+        Button(
+            onClick = {
+                if (pass0 == pass1)
+                    viewModel.edit(pass0)
+            },
+            enabled = pass0.isNotBlank() && pass0 == pass1
+        ) {
             Text("Подтвердить")
         }
     }
