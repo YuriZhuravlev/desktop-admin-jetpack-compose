@@ -3,11 +3,13 @@ package screens.change_password
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import data.model.UIUser
@@ -19,10 +21,24 @@ fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, o
     var pass1 by remember { mutableStateOf("") }
     val result by viewModel.result.collectAsState()
 
-    result?.let(onSuccess)
+    result?.ifSuccess {
+        it?.let(onSuccess)
+    }
 
     Column(modifier) {
-        NormalText("Придумайте пароль", modifier = Modifier.align(Alignment.CenterHorizontally))
+        NormalText(
+            if (viewModel.strongPassword)
+                "Придумайте сложный пароль (Наличие латинских букв и символов кириллицы)"
+            else
+                "Придумайте пароль",
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        if (viewModel.result.value?.status?.isError() == true)
+            Text(
+                text = "Пароль не соответствует требованию сложности",
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = Color.Red
+            )
         TextField(
             pass0,
             onValueChange = {
@@ -39,14 +55,18 @@ fun ChangePasswordView(viewModel: ChangePasswordViewModel, modifier: Modifier, o
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 16.dp),
             visualTransformation = PasswordVisualTransformation()
         )
-        Button(
-            onClick = {
-                if (pass0 == pass1)
-                    viewModel.edit(pass0)
-            },
-            enabled = pass0.isNotBlank() && pass0 == pass1
-        ) {
-            Text("Подтвердить")
+        if (result?.status?.isLoading() == true) {
+            CircularProgressIndicator(modifier.align(Alignment.CenterHorizontally))
+        } else {
+            Button(
+                onClick = {
+                    if (pass0 == pass1)
+                        viewModel.edit(pass0)
+                },
+                enabled = pass0.isNotBlank() && pass0 == pass1
+            ) {
+                Text("Подтвердить")
+            }
         }
     }
 }

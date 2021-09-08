@@ -66,7 +66,7 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
                 user?.data?.let {
                     if (it.password.isBlank()) {
                         ChangePasswordView(
-                            ChangePasswordViewModel(it.id, RepositoryUser),
+                            ChangePasswordViewModel(it, RepositoryUser),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
                             viewModel.newPassword(it)
