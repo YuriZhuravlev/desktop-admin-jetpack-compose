@@ -85,7 +85,7 @@ object DAOImpl : DAO {
                 this.username = username
                 password = ""
                 isBlocked = false
-                this.strongPassword = true
+                this.strongPassword = strongPassword
             }
         }
     }
