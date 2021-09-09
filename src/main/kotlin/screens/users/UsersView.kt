@@ -26,7 +26,7 @@ fun UsersView(viewModel: UsersViewModel, modifier: Modifier = Modifier) {
         viewModel.getUsers()
 
     Surface(modifier.fillMaxSize()) {
-        val user = selectedUser
+        val user = selectedUser.data
         if (user == null) {
             LazyColumn(modifier.fillMaxWidth()) {
                 item {
@@ -82,7 +82,7 @@ fun UserDetails(viewModel: UsersViewModel, modifier: Modifier) {
                 viewModel.selectUser(null)
             }.padding(8.dp)
         )
-        val user = selectedUser
+        val user = selectedUser.data
         if (user != null) {
             NormalText("id: ${user.id}", Modifier.padding(start = 4.dp))
             Divider(Modifier.fillMaxWidth())
@@ -90,17 +90,25 @@ fun UserDetails(viewModel: UsersViewModel, modifier: Modifier) {
             Divider(Modifier.fillMaxWidth())
             Row {
                 NormalText("is_blocked: ", Modifier.padding(start = 4.dp))
-                Switch(user.isBlocked, onCheckedChange = {
-                    viewModel.patchIsBlocked(it)
-                }, enabled = !user.isAdmin)
+                if (selectedUser.status.isLoading())
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp).align(Alignment.CenterVertically))
+                else
+                    Switch(user.isBlocked, onCheckedChange = {
+                        viewModel.patchIsBlocked(it)
+                    }, enabled = !user.isAdmin)
             }
             Divider(Modifier.fillMaxWidth())
             Row {
                 NormalText("strong_password: ", Modifier.padding(start = 4.dp))
-                Switch(user.strongPassword, onCheckedChange = {
-                    viewModel.patchStrongPassword(it)
-                })
+                if (selectedUser.status.isLoading())
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp).align(Alignment.CenterVertically))
+                else
+                    Switch(user.strongPassword, onCheckedChange = {
+                        viewModel.patchStrongPassword(it)
+                    })
             }
+            if (selectedUser.status.isError())
+                Text(selectedUser.error?.message ?: "Error", color = Color.Red)
         }
         if ((viewModel.users.value.data?.size ?: 0) > 1) {
             Row(Modifier.fillMaxSize().padding(bottom = 8.dp, top = 24.dp)) {

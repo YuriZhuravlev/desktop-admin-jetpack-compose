@@ -30,11 +30,21 @@ object RepositoryUser {
     suspend fun editPassword(userId: Int, newPassword: String): UIUser? =
         dao.editPassword(userId, newPassword)?.toUIUser()
 
-    suspend fun editIsBlocked(id: Int, fl: Boolean): UIUser? =
-        dao.editIsBlocked(id, fl)?.toUIUser()
+    suspend fun editIsBlocked(id: Int, fl: Boolean): Resource<UIUser?> =
+        try {
+            Resource.success(dao.editIsBlocked(id, fl)?.toUIUser())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.error(e)
+        }
 
-    suspend fun editStrongPassword(id: Int, fl: Boolean): UIUser? =
-        dao.editStrongPassword(id, fl)?.toUIUser()
+    suspend fun editStrongPassword(id: Int, fl: Boolean): Resource<UIUser?> =
+        try {
+            Resource.success(dao.editStrongPassword(id, fl)?.toUIUser())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.error(e)
+        }
 
     suspend fun addUser(name: String, strongPassword: Boolean): Resource<UIUser> {
         return try {

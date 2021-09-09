@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import utils.ViewModel
+import utils.checkPassword
 
 class ChangePasswordViewModel(private val user: UIUser, private val repositoryUser: RepositoryUser) : ViewModel() {
     private val _result = MutableStateFlow<Resource<UIUser>?>(null)
@@ -18,8 +19,7 @@ class ChangePasswordViewModel(private val user: UIUser, private val repositoryUs
             _result.emit(Resource.loading())
             // 8.	Наличие латинских букв и символов кириллицы.
             if (!strongPassword ||
-                (newPassword.contains(Regex("[a-zA-Z]"))
-                        && newPassword.contains(Regex("[а-яА-ЯёЁ]")))
+                checkPassword(newPassword)
             ) {
                 repositoryUser.editPassword(user.id, newPassword)?.let {
                     _result.emit(Resource.success(it))
