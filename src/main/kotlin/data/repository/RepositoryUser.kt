@@ -5,9 +5,12 @@ import data.db.DAO
 import data.db.DAOImpl
 import data.db.entity.DBUser
 import data.model.UIUser
+import utils.Encryption
+import utils.EncryptionPassword
 
 object RepositoryUser {
     private val dao: DAO = DAOImpl
+    private val encryption: Encryption = EncryptionPassword()
 
     suspend fun getUserByName(name: String): Resource<UIUser?> {
         return try {
@@ -28,7 +31,7 @@ object RepositoryUser {
     }
 
     suspend fun editPassword(userId: Int, newPassword: String): UIUser? =
-        dao.editPassword(userId, newPassword)?.toUIUser()
+        dao.editPassword(userId, encryption.encryptionPassword(newPassword))?.toUIUser()
 
     suspend fun editIsBlocked(id: Int, fl: Boolean): Resource<UIUser?> =
         try {
@@ -54,6 +57,11 @@ object RepositoryUser {
             Resource.error(e)
         }
     }
+
+    /**
+     * Расшифровка пароля
+     */
+    fun decryptionPassword(user: UIUser): String = encryption.decryptionPassword(user.password)
 }
 
 fun DBUser.toUIUser() = UIUser(id.value, username, password, isBlocked, strongPassword)

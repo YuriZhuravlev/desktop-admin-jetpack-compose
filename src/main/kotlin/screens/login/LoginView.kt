@@ -85,7 +85,7 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
             // Ввод пароля
             (user?.status == Resource.Status.SUCCESS && count < 3) -> {
                 user?.data?.let {
-                    if (it.password.isBlank()) {
+                    if (it.password.isEmpty()) {
                         ChangePasswordView(
                             ChangePasswordViewModel(it, RepositoryUser),
                             modifier = Modifier.align(Alignment.CenterHorizontally)

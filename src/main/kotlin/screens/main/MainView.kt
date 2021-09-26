@@ -116,7 +116,7 @@ fun MainView(viewModel: MainViewModel) {
                                 }
                                 Button(
                                     onClick = {
-                                        if (pass0 == profile?.password) {
+                                        if (pass0 == viewModel.password) {
                                             accept = true
                                         } else {
                                             error = true

@@ -10,7 +10,10 @@ import utils.ViewModel
 class MainViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
     private val _profile = MutableStateFlow<UIUser?>(null)
     val profile = _profile.asStateFlow()
-
+    val password: String?
+        get() = profile.value?.let {
+            repositoryUser.decryptionPassword(it)
+        }
     private val _state = MutableStateFlow(MainState.empty)
     val state = _state.asStateFlow()
 
