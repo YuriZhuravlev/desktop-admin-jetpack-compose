@@ -1,10 +1,13 @@
 package screens.session
 
-import data.model.SessionState
+import kotlinx.coroutines.launch
 import utils.ViewModel
+import utils.databaseChecker
 
 class SessionViewModel : ViewModel() {
-    fun checkPassword(password: String): SessionState {
-        return SessionState.CLOSE_SESSION
+    fun checkPassword(password: String, callback: (result: Boolean) -> Unit) {
+        viewModelScope.launch {
+            callback(databaseChecker(password))
+        }
     }
 }

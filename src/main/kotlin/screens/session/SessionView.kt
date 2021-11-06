@@ -16,7 +16,7 @@ import data.model.SessionState
 import ui.NormalText
 
 @Composable
-fun SessionView(viewModel: SessionViewModel, onChange: (SessionState) -> Unit) {
+fun SessionView(viewModel: SessionViewModel, onChange: (SessionState, String) -> Unit) {
     var password by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
         NormalText(
@@ -34,7 +34,9 @@ fun SessionView(viewModel: SessionViewModel, onChange: (SessionState) -> Unit) {
         )
         Button(
             onClick = {
-                onChange(viewModel.checkPassword(password))
+                viewModel.checkPassword(password) {
+                    onChange(if (it) SessionState.SESSION else SessionState.CLOSE_SESSION, password)
+                }
             },
             enabled = password.isNotBlank(),
             modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.4f)

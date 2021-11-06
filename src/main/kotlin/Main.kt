@@ -8,11 +8,14 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import data.model.SessionState
 import data.repository.RepositoryUser
+import screens.close_session.CloseSession
 import screens.main.MainView
 import screens.main.MainViewModel
 import screens.session.SessionView
 import screens.session.SessionViewModel
-import kotlin.system.exitProcess
+import utils.encrypt
+
+private var key: String? = null
 
 @Composable
 @Preview
@@ -20,9 +23,14 @@ fun App() {
     DesktopMaterialTheme {
         var sessionState by remember { mutableStateOf(SessionState.LOGIN_SESSION) }
         when (sessionState) {
-            SessionState.LOGIN_SESSION -> SessionView(SessionViewModel()) { sessionState = it }
+            SessionState.LOGIN_SESSION -> SessionView(SessionViewModel()) { state, pass ->
+                sessionState = state
+                if (state == SessionState.SESSION) {
+                    key = pass
+                }
+            }
             SessionState.SESSION -> MainView(MainViewModel(RepositoryUser))
-            SessionState.CLOSE_SESSION -> exitProcess(0)
+            SessionState.CLOSE_SESSION -> CloseSession()
         }
     }
 }
@@ -30,7 +38,9 @@ fun App() {
 fun main() = application {
     Window(
         onCloseRequest = {
-            // TODO шифрование
+            key?.let { key ->
+                encrypt(key)
+            }
             exitApplication()
         },
         title = "Журавлев А-05-18",
