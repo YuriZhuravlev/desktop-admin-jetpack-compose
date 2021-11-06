@@ -4,6 +4,7 @@ import androidx.compose.ui.res.useResource
 import data.db.entity.DBUser
 import data.db.entity.UserTable
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,7 +20,21 @@ object DAOImpl : DAO {
                 it.copyTo(file.outputStream())
             }
         }
-        Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
+        val db = Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
+
+        transaction(db) {
+            addLogger(StdOutSqlLogger)
+            if (!SchemaUtils.checkCycle(UserTable)) {
+                SchemaUtils.create(UserTable)
+                DBUser.new {
+                    this.username = "ADMIN"
+                    password = ByteArray(0)
+                    isBlocked = false
+                    strongPassword = false
+                }
+            }
+        }
+        db
     }
 
     override suspend fun getUser(id: Int): DBUser? {
@@ -55,7 +70,7 @@ object DAOImpl : DAO {
         }
     }
 
-    override suspend fun editPassword(userId: Int, newPassword: String): DBUser? {
+    override suspend fun editPassword(userId: Int, newPassword: ByteArray): DBUser? {
         return transaction(db) {
             DBUser[userId]?.apply {
                 password = newPassword
@@ -83,7 +98,7 @@ object DAOImpl : DAO {
         return transaction(db) {
             DBUser.new {
                 this.username = username
-                password = ""
+                password = ByteArray(0)
                 isBlocked = false
                 this.strongPassword = strongPassword
             }

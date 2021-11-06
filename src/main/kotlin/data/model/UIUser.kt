@@ -3,7 +3,7 @@ package data.model
 data class UIUser(
     val id: Int,
     val username: String,
-    val password: String,
+    val password: ByteArray,
     val isBlocked: Boolean,
     val strongPassword: Boolean
 )

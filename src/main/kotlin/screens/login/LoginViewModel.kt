@@ -28,10 +28,13 @@ class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
         }
     }
 
-    fun checkPassword(password: String) {
+    fun checkPassword(inputPassword: String) {
         viewModelScope.launch {
             val profile = _user.value
-            if (profile?.data?.password == password)
+            val password = profile?.data?.let {
+                repositoryUser.decryptionPassword(it)
+            }
+            if (password == inputPassword)
                 profile.data.let {
                     _auth.emit(Resource(profile.status, it, profile.error))
                 }
