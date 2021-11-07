@@ -8,14 +8,15 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import data.model.SessionState
 import data.repository.RepositoryUser
+import data.repository.encrypt
 import screens.close_session.CloseSession
 import screens.main.MainView
 import screens.main.MainViewModel
 import screens.session.SessionView
 import screens.session.SessionViewModel
-import utils.encrypt
+import java.security.Key
 
-private var key: String? = null
+private var key: Key? = null
 
 @Composable
 @Preview

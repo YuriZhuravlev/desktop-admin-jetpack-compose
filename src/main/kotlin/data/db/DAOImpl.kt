@@ -13,26 +13,25 @@ import java.io.File
 
 object DAOImpl : DAO {
     private val db by lazy {
-        val file = File("data.db")
+        val file = File("data.d")
         if (!file.exists()) {
             file.createNewFile()
-            useResource("data.db") {
+            useResource("data.d") {
                 it.copyTo(file.outputStream())
             }
         }
-        val db = Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
+        val db = Database.connect("jdbc:sqlite:data.d", "org.sqlite.JDBC")
 
         transaction(db) {
             addLogger(StdOutSqlLogger)
-            if (!SchemaUtils.checkCycle(UserTable)) {
-                SchemaUtils.create(UserTable)
+            SchemaUtils.create(UserTable)
+            if (DBUser.all().empty())
                 DBUser.new {
                     this.username = "ADMIN"
                     password = ByteArray(0)
                     isBlocked = false
                     strongPassword = false
                 }
-            }
         }
         db
     }

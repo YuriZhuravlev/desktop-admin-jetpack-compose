@@ -14,9 +14,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import data.model.SessionState
 import ui.NormalText
+import java.security.Key
 
 @Composable
-fun SessionView(viewModel: SessionViewModel, onChange: (SessionState, String) -> Unit) {
+fun SessionView(viewModel: SessionViewModel, onChange: (SessionState, Key) -> Unit) {
     var password by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
         NormalText(
@@ -34,8 +35,12 @@ fun SessionView(viewModel: SessionViewModel, onChange: (SessionState, String) ->
         )
         Button(
             onClick = {
-                viewModel.checkPassword(password) {
-                    onChange(if (it) SessionState.SESSION else SessionState.CLOSE_SESSION, password)
+                val key = utils.getKey(password)
+                viewModel.checkPassword(key) {
+                    onChange(
+                        if (it) SessionState.SESSION else SessionState.CLOSE_SESSION,
+                        key
+                    )
                 }
             },
             enabled = password.isNotBlank(),

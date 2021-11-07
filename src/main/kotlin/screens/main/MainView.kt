@@ -28,7 +28,6 @@ import screens.users.UsersView
 import screens.users.UsersViewModel
 import ui.BigText
 import ui.NormalText
-import kotlin.system.exitProcess
 
 @Composable
 fun MainView(viewModel: MainViewModel) {
@@ -168,7 +167,7 @@ fun ActionMenu(isAdmin: Boolean, viewModel: MainViewModel) {
         }
         Text("Смена пароля", modifier = Modifier.clickable { viewModel.postState(MainState.changePassword) })
         Text("Выход из аккаунта", modifier = Modifier.clickable { viewModel.logout() })
-        Text("Завершение программы", modifier = Modifier.clickable { exitProcess(0) })
+//        Text("Завершение программы", modifier = Modifier.clickable { exitProcess(0) })
     }
 }
 

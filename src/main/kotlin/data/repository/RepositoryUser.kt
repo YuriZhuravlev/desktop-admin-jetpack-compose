@@ -7,6 +7,8 @@ import data.db.entity.DBUser
 import data.model.UIUser
 import utils.Encryption
 import utils.EncryptionPassword
+import java.io.File
+import java.security.Key
 
 object RepositoryUser {
     private val dao: DAO = DAOImpl
@@ -65,3 +67,50 @@ object RepositoryUser {
 }
 
 fun DBUser.toUIUser() = UIUser(id.value, username, password, isBlocked, strongPassword)
+
+
+private const val NAME_DB = "data.d"
+private const val NAME_BIN = "data.bin"
+
+fun databaseChecker(key: Key): Boolean {
+    val file = File(NAME_BIN)
+    if (!file.exists()) {
+        return true
+    }
+    return if (key.encoded.contentEquals(decrypt(key))) {
+        true
+    } else {
+        val file = File(NAME_DB)
+        file.writeBytes(ByteArray(0))
+        file.delete()
+        false
+    }
+}
+
+fun encrypt(key: Key) {
+    try {
+        key.encoded
+        val enc = File(NAME_DB).readBytes()
+        val dec = File(NAME_BIN).outputStream()
+        dec.write(key.encoded.size)
+        dec.write(key.encoded)
+        dec.write(enc)
+        File(NAME_DB).delete()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+fun decrypt(key: Key): ByteArray? {
+    var pass: ByteArray? = null
+    try {
+        val enc = File(NAME_DB).outputStream()
+        val dec = File(NAME_BIN).inputStream()
+        val len = dec.read()
+        pass = dec.readNBytes(len)
+        enc.write(dec.readBytes())
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return pass
+}
