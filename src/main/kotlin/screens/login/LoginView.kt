@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.dp
 import data.Resource
 import data.model.UIUser
 import data.repository.RepositoryUser
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import screens.change_password.ChangePasswordView
 import screens.change_password.ChangePasswordViewModel
 import screens.login.LoginViewModel
@@ -31,6 +34,7 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
     var password by remember { mutableStateOf("") }
     val user by viewModel.user.collectAsState()
     val auth by viewModel.auth.collectAsState()
+    val verification by viewModel.verification.collectAsState()
     auth.ifSuccess {
         viewModel.close()
         it?.let(onLogin)
@@ -40,6 +44,24 @@ fun LoginViev(viewModel: LoginViewModel, onLogin: (UIUser) -> Unit) {
         BigText("Вход", modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 24.dp))
 
         when {
+            // Проверка ЭЛ подписи
+            (verification.status.isLoading()) -> {
+                NormalText("Подготовка программы", modifier = Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 16.dp)
+                )
+            }
+            // Проверка неудачна
+            (verification.status.isSuccess() && verification.data == false) -> {
+                NormalText(
+                    "Обнаружен несанкционированный доступ!",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                MainScope().launch {
+                    delay(1000)
+                    exitProcess(0)
+                }
+            }
             // Ввод имени
             (user == null || user?.status == Resource.Status.ERROR || (user?.status == Resource.Status.SUCCESS && user?.data == null)) -> {
                 NormalText("Введите своё имя", modifier = Modifier.align(Alignment.CenterHorizontally))

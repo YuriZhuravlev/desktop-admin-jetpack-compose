@@ -6,6 +6,7 @@ import data.repository.RepositoryUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import utils.SignatureVerification.signatureVerification
 import utils.ViewModel
 
 class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
@@ -14,6 +15,23 @@ class LoginViewModel(private val repositoryUser: RepositoryUser) : ViewModel() {
 
     private val _auth = MutableStateFlow<Resource<UIUser>>(Resource.loading())
     val auth = _auth.asStateFlow()
+
+    private val _verification = MutableStateFlow<Resource<Boolean>>(Resource.loading())
+    val verification = _verification.asStateFlow()
+
+    init {
+        // проверка не требует вмешательства пользователя, поэтому запускается автоматически
+        verify()
+    }
+
+    /**
+     * Проверка ЭП
+     */
+    private fun verify() {
+        viewModelScope.launch {
+            _verification.emit(Resource.success(signatureVerification()))
+        }
+    }
 
     fun getUser(name: String) {
         viewModelScope.launch {

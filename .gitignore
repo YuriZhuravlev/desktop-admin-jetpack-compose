@@ -13,3 +13,4 @@ build/
 /captures
 .externalNativeBuild
 .cxx
+/Installer/Resources/ComposeDataProtection-windows-x64-1.0.0.jar

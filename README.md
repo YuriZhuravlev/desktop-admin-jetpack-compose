@@ -11,5 +11,8 @@ Jetpack Compose for Desktop, SQLite3, Kotlin, mvvm
 
 Обычный пользователь может:
 Администратор имеет право:
+
 - сменить пароль
 - выход из аккаунта
+
+Устанавливаемая программа (jar) помещается по ./Installer/Resources/<FILE>.jar
